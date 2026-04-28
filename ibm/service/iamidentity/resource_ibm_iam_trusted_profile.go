@@ -1,8 +1,8 @@
-// Copyright IBM Corp. 2025 All Rights Reserved.
+// Copyright IBM Corp. 2026 All Rights Reserved.
 // Licensed under the Mozilla Public License v2.0
 
 /*
- * IBM OpenAPI Terraform Generator Version: 3.98.0-8be2046a-20241205-162752
+ * IBM OpenAPI Terraform Generator Version: 3.113.1-d76630af-20260320-135953
  */
 
 package iamidentity
@@ -13,16 +13,17 @@ import (
 	"log"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+
 	"github.com/IBM-Cloud/terraform-provider-ibm/ibm/conns"
 	"github.com/IBM-Cloud/terraform-provider-ibm/ibm/flex"
 	"github.com/IBM/go-sdk-core/v5/core"
 	"github.com/IBM/platform-services-go-sdk/iamidentityv1"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/retry"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func ResourceIBMIAMTrustedProfile() *schema.Resource {
+func ResourceIBMIamTrustedprofile() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceIBMIamTrustedProfileCreate,
 		ReadContext:   resourceIBMIamTrustedProfileRead,
@@ -40,6 +41,11 @@ func ResourceIBMIAMTrustedProfile() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The optional description of the trusted profile. The 'description' property is only available if a description was provided during a create of a trusted profile.",
+			},
+			"email": &schema.Schema{
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The optional email of the trusted profile. The 'email' property is only available if an email was provided during a create of a trusted profile.",
 			},
 			"account_id": &schema.Schema{
 				Type:        schema.TypeString,
@@ -132,6 +138,25 @@ func ResourceIBMIAMTrustedProfile() *schema.Resource {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "Message which summarizes the executed action.",
+						},
+					},
+				},
+			},
+			"activity": &schema.Schema{
+				Type:     schema.TypeList,
+				Computed: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"last_authn": &schema.Schema{
+							Type:        schema.TypeString,
+							Optional:    true,
+							Computed:    true,
+							Description: "Time when the entity was last authenticated.",
+						},
+						"authn_count": &schema.Schema{
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Authentication count, number of times the entity was authenticated.",
 						},
 					},
 				},

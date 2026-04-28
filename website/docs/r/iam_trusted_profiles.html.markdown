@@ -2,45 +2,57 @@
 layout: "ibm"
 page_title: "IBM : ibm_iam_trusted_profiles"
 description: |-
-  Get information about iam_trusted_profiles
+  Manages iam_trusted_profiles.
 subcategory: "IAM Identity Services"
 ---
 
 # ibm_iam_trusted_profiles
 
-Provides a read-only data source to retrieve information about iam_trusted_profiles. You can then reference the fields of the data source in other resources within the same configuration by using interpolation syntax.
+Create, update, and delete iam_trusted_profiless with this resource.
 
 ## Example Usage
 
 ```hcl
-data "ibm_iam_trusted_profiles" "iam_trusted_profiles" {
-	profile_id = "profile_id"
+resource "ibm_iam_trusted_profiles" "iam_trusted_profiles_instance" {
+  account_id = "account_id"
+  name = "name"
 }
 ```
 
 ## Argument Reference
 
-You can specify the following arguments for this data source.
+You can specify the following arguments for this resource.
 
-* `include_activity` - (Optional, Boolean) Defines if the entity's activity is included in the response. Retrieving activity data is an expensive operation, so only request this when needed.
-  * Constraints: The default value is `false`.
-* `profile_id` - (Required, Forces new resource, String) ID of the trusted profile to get.
+* `account_id` - (Required, String) ID of the account that this trusted profile belong to.
+* `description` - (Optional, String) The optional description of the trusted profile. The 'description' property is only available if a description was provided during a create of a trusted profile.
+* `email` - (Optional, String) The optional email of the trusted profile. The 'email' property is only available if an email was provided during a create of a trusted profile.
+* `name` - (Required, String) Name of the trusted profile. The name is checked for uniqueness. Therefore trusted profiles with the same names can not exist in the same account.
 
 ## Attribute Reference
 
-After your data source is created, you can read values from the following attributes.
+After your resource is created, you can read values from the listed arguments and the following attributes.
 
 * `id` - The unique identifier of the iam_trusted_profiles.
-* `account_id` - (String) ID of the account that this trusted profile belong to.
 * `activity` - (List) 
 Nested schema for **activity**:
 	* `authn_count` - (Integer) Authentication count, number of times the entity was authenticated.
 	* `last_authn` - (String) Time when the entity was last authenticated.
 * `assignment_id` - (String) ID of the assignment that was used to create an enterprise-managed trusted profile in your account. When returned, this indicates that the trusted profile is created from and managed by a template in the root enterprise account.
+* `context` - (List) Context with key properties for problem determination.
+Nested schema for **context**:
+	* `cluster_name` - (String) The cluster name.
+	* `elapsed_time` - (String) The elapsed time in msec.
+	* `end_time` - (String) The finish time of the request.
+	* `host` - (String) The host of the server instance processing the request.
+	* `instance_id` - (String) The instance ID of the server instance processing the request.
+	* `operation` - (String) The operation of the inbound REST request.
+	* `start_time` - (String) The start time of the request.
+	* `thread_id` - (String) The thread ID of the server instance processing the request.
+	* `transaction_id` - (String) The transaction ID of the inbound REST request.
+	* `url` - (String) The URL of that cluster.
+	* `user_agent` - (String) The user agent of the inbound REST request.
 * `created_at` - (String) If set contains a date time string of the creation date in ISO format.
 * `crn` - (String) Cloud Resource Name of the item. Example Cloud Resource Name: 'crn:v1:bluemix:public:iam-identity:us-south:a/myaccount::profile:Profile-94497d0d-2ac3-41bf-a993-a49d1b14627c'.
-* `description` - (String) The optional description of the trusted profile. The 'description' property is only available if a description was provided during a create of a trusted profile.
-* `email` - (String) The optional email of the trusted profile. The 'email' property is only available if an email was provided during a create of a trusted profile.
 * `entity_tag` - (String) Version of the trusted profile details object. You need to specify this value when updating the trusted profile to avoid stale updates.
 * `history` - (List) History of the trusted profile.
 Nested schema for **history**:
@@ -51,9 +63,18 @@ Nested schema for **history**:
 	* `params` - (List) Params of the history entry.
 	* `timestamp` - (String) Timestamp when the action was triggered.
 * `iam_id` - (String) The iam_id of this trusted profile.
+* `id` - (String) the unique identifier of the trusted profile. Example:'Profile-94497d0d-2ac3-41bf-a993-a49d1b14627c'.
 * `ims_account_id` - (Integer) IMS acount ID of the trusted profile.
 * `ims_user_id` - (Integer) IMS user ID of the trusted profile.
 * `modified_at` - (String) If set contains a date time string of the last modification date in ISO format.
-* `name` - (String) Name of the trusted profile. The name is checked for uniqueness. Therefore trusted profiles with the same names can not exist in the same account.
 * `template_id` - (String) ID of the IAM template that was used to create an enterprise-managed trusted profile in your account. When returned, this indicates that the trusted profile is created from and managed by a template in the root enterprise account.
 
+
+## Import
+
+You can import the `ibm_iam_trusted_profiles` resource by using `account_id`. ID of the account that this trusted profile belong to.
+
+# Syntax
+<pre>
+$ terraform import ibm_iam_trusted_profiles.iam_trusted_profiles &lt;account_id&gt;
+</pre>
